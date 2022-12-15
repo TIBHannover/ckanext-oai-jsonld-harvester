@@ -1,0 +1,14 @@
+# massbankharvester-js:
+#   filter: rjsmin
+#   output: ckanext-massbankharvester/%(version)s-massbankharvester.js
+#   contents:
+#     - js/massbankharvester.js
+#   extra:
+#     preload:
+#       - base/main
+
+# massbankharvester-css:
+#   filter: cssrewrite
+#   output: ckanext-massbankharvester/%(version)s-massbankharvester.css
+#   contents:
+#     - css/massbankharvester.css
