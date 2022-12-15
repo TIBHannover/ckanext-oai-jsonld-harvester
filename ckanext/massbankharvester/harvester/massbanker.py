@@ -23,7 +23,7 @@ import oaipmh.client
 from oaipmh.client import Client
 from oaipmh.metadata import MetadataRegistry
 
-from ckanext.massbankharvester.metedata import json_container_reader
+from ckanext.massbankharvester.harvester.metadata import json_container_reader
 
 from rdkit.Chem import inchi
 from rdkit.Chem import rdmolfiles
