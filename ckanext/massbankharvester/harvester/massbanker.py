@@ -228,7 +228,7 @@ class MassbankHarvester(HarvesterBase):
             try:
                 content_dict = metadata.getMap()
                 json_script = ''.join(content_dict['json_data'])
-                data = re.sub(r'[\n ]+', ' ', script).strip()
+                data = re.sub(r'[\n ]+', ' ', json_script).strip()
                 expected_finalValue = json.loads(data)
                 content_dict["set_spec"] = header.setSpec()
 
