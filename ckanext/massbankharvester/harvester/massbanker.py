@@ -451,6 +451,7 @@ class MassbankHarvester(HarvesterBase):
     #             package_license = license_name['id']
     #
     #     return package_license
+    ''' Extract resources from source URL'''
 
     def _extract_resources(self, content):
         resources = []
@@ -514,55 +515,6 @@ class MassbankHarvester(HarvesterBase):
         tags = [{"name": munge_tag(tag[:100])} for tag in tags]
 
         return (tags, extras, related_resources)
-
-
-    def _extract_resources(self, url, content):
-        resources = []
-        log.debug("URL of resource: %s" % url)
-        if url:
-            try:
-                resource_format = content["format"][0]
-            except (IndexError, KeyError):
-                resource_format = "HTML"
-            resources.append(
-                {
-                    "name": content["title"][0],
-                    "resource_type": resource_format,
-                    "format": resource_format,
-                    "url": url,
-                }
-            )
-        return resources
-
-    def _extract_groups(self, content, context):
-        if "series" in content and len(content["series"]) > 0:
-            return self._find_or_create_groups(content["series"], context)
-        return []
-
-    def _extract_additional_fields(self, content, package_dict):
-        # This method is the ideal place for sub-classes to
-        # change whatever they want in the package_dict
-        return package_dict
-
-    def _find_or_create_groups(self, groups, context):
-        log.debug("Group names: %s" % groups)
-        group_ids = []
-        for group_name in groups:
-            data_dict = {
-                "id": group_name,
-                "name": munge_title_to_name(group_name),
-                "title": group_name,
-            }
-            try:
-                group = get_action("group_show")(context.copy(), data_dict)
-                log.info("found the group " + group["id"])
-            except:
-                group = get_action("group_create")(context.copy(), data_dict)
-                log.info("created the group " + group["id"])
-            group_ids.append(group["id"])
-
-        log.debug("Group ids: %s" % group_ids)
-        return group_ids
 
 
 # NFDI4Chem extensions for storing chemical data in respective tables
@@ -683,47 +635,49 @@ class MassbankHarvester(HarvesterBase):
         log.debug('data sent to db')
         return 0
 
-    def _extract_measuring_tech(self,content):
 
-        tag_names = None
-        package_title = str(content['title'])
+    ''' To extract measuring techniques and converting them to CKAN Tag as facets'''
+    #def _extract_measuring_tech(self,content):
+    #
+    #    tag_names = None
+    #    package_title = str(content['title'])
+    #
+    #    #mass spectrometry
+    #    mass_Exp = re.compile(r'Mass')
+    #    mass_exp = re.compile(r'mass')
+    #    hnmr_exp =  re.compile(r'1H NMR')
+    #    cnmr_exp = re.compile(r'13C NMR')
+    #    ir_exp = re.compile(r'IR')
+    #    uv_exp = re.compile(r'UV')
+    #
+    #    if mass_exp.search(package_title) or mass_Exp.search(package_title):
+    #        tag_names = ['mass-spectrometry']
+    #        return tag_names
+    #
+    #    if hnmr_exp.search(package_title):
+    #        tag_names = ['1H-NMR']
+    #        return tag_names
+    #
+    #    if cnmr_exp.search(package_title):
+    #        tag_names = ['13C-NMR']
+    #        return tag_names
+    #
+    #    if ir_exp.search(package_title):
+    #        tag_names = ['IR']
+    #        return tag_names
+    #
+    #    if uv_exp.search(package_title):
+    #        tag_names = ['UV']
+    #        return tag_names
+    #
+    #    else:
+    #        return None
+    #    #tag_name = [{"name": munge_tag(tag[:100])} for tag in tag_names]
 
-        #mass spectrometry
-        mass_Exp = re.compile(r'Mass')
-        mass_exp = re.compile(r'mass')
-        hnmr_exp =  re.compile(r'1H NMR')
-        cnmr_exp = re.compile(r'13C NMR')
-        ir_exp = re.compile(r'IR')
-        uv_exp = re.compile(r'UV')
 
-        if mass_exp.search(package_title) or mass_Exp.search(package_title):
-            tag_names = ['mass-spectrometry']
-            return tag_names
-
-        if hnmr_exp.search(package_title):
-            tag_names = ['1H-NMR']
-            return tag_names
-
-        if cnmr_exp.search(package_title):
-            tag_names = ['13C-NMR']
-            return tag_names
-
-        if ir_exp.search(package_title):
-            tag_names = ['IR']
-            return tag_names
-
-        if uv_exp.search(package_title):
-            tag_names = ['UV']
-            return tag_names
-
-        else:
-            return None
-        #tag_name = [{"name": munge_tag(tag[:100])} for tag in tag_names]
-
-
-    def yield_func(self,package_id, relation_id,relationType,relationIdType):
-        # An yield function to return generator list values to make a single list of values
-
-        for p,q,r in zip(relation_id,relationType,relationIdType):
-            value = (package_id, p,q,r )
-            yield value
+    #def yield_func(self,package_id, relation_id,relationType,relationIdType):
+    #    # An yield function to return generator list values to make a single list of values
+    #
+    #    for p,q,r in zip(relation_id,relationType,relationIdType):
+    #        value = (package_id, p,q,r )
+    #        yield value
