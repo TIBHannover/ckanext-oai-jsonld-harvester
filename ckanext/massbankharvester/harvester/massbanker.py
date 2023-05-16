@@ -452,6 +452,7 @@ class MassbankHarvester(HarvesterBase):
     #             package_license = license_name['id']
     #
     #     return package_license
+
     ''' Extract resources from source URL'''
 
     def _extract_resources(self, content):
