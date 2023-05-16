@@ -85,7 +85,7 @@ class MassbankHarvester(HarvesterBase):
                     guid=header.identifier(), job=harvest_job
                 )
                 #TODO: drop if and  break
-                if guid == 'https://massbank.eu/MassBank/RecordDisplay?id=MSBNK-Fac_Eng_Univ_Tokyo-JP002512#VTSZSPVMHBJJIS-UHFFFAOYSA-N':
+                if harvest_obj.guid == 'https://massbank.eu/MassBank/RecordDisplay?id=MSBNK-Fac_Eng_Univ_Tokyo-JP002512#VTSZSPVMHBJJIS-UHFFFAOYSA-N':
                     harvest_obj.save()
                     #harvest_obj_ids.append(harvest_obj.id)
                     log.debug("Harvest obj %s created" % harvest_obj.id)
