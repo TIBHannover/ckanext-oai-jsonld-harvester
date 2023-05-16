@@ -393,9 +393,9 @@ class MassbankHarvester(HarvesterBase):
            # log.debug(self._save_relationships_to_db(package_dict, content, smiles,inchi_key,exact_mass,mol_formula))
 
 
+        #'''_ adapted from Bioschema scrapper Harvester for updates _'''
+        # add notes, license_id
 
-
-            # add notes, license_id
             package_dict['notes'] = content['description']
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
@@ -403,8 +403,8 @@ class MassbankHarvester(HarvesterBase):
             extras = self._extract_extras_image(package=package_dict, content=content)
             package_dict['extras'] = extras
 
-            tags = self._extract_tags(content)
-            package_dict['tags'] = tags
+            #tags = self._extract_tags(content)
+            #package_dict['tags'] = tags
 
             # creating package
             log.debug("Create/update package using dict: %s" % package_dict)
@@ -473,48 +473,20 @@ class MassbankHarvester(HarvesterBase):
         return resources
 
 
-    def _extract_tags_and_extras(self, content):
-        extras = []
+    def _extract_tags(self,content):
         tags = []
-        related_resources = []
+        try:
+            technique = [content['measurementTechnique']]
+            log.debug(f'this is technia {technique}')
+            if technique:
+                tags.extend(technique)
 
-        for key, value in content.items():
-            if key in self._get_mapping().values():
-                continue
-            if key in ["type", "subject"]:
-                if type(value) is list:
-                    tags.extend(value)
-                else:
-                    tags.extend(value.split(";"))
-                continue
-            if value and type(value) is list:
-                    # To harvest related and relationType without raising any exceptions
-                    if key == 'relation' or key == 'relationType':
-                        try:
-                            value = value
-                        except Exception:
-                            pass
-                    else:
-                        value = value[0]
-            if not value:
-                value = None
-            if key.endswith("date") and value:
-                # the ckan indexer can't handle timezone-aware datetime objects
-                try:
-                    from dateutil.parser import parse
-                    date_value = parse(value)
-                    date_without_tz = date_value.replace(tzinfo=None)
-                    value = date_without_tz.isoformat()
-                except (ValueError, TypeError):
-                    continue
-            extras.append({"key": key, "value": value})
+            tags = [{"name": munge_tag(tag[:100])} for tag in tags]
+        except Exception as e:
+            log.debug(e)
 
-        tag_tech = self._extract_measuring_tech(content)
-        if tag_tech:
-            tags.extend(tag_tech)
-        tags = [{"name": munge_tag(tag[:100])} for tag in tags]
+        return tags
 
-        return (tags, extras, related_resources)
 
 
 # NFDI4Chem extensions for storing chemical data in respective tables
