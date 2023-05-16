@@ -306,11 +306,19 @@ class MassbankHarvester(HarvesterBase):
             package_dict["name"] = package_dict["id"]
 
             mapping = self._get_mapping()
-            for ckan_field, oai_field in mapping.items():
+            for ckan_field, json_container_field in mapping.items():
                 try:
-                    package_dict[ckan_field] = content[oai_field][0]
+                    package_dict[ckan_field] = content[json_container_field][0]
                 except (IndexError, KeyError):
                     continue
+
+                    # get id
+            package_dict["id"] = munge_title_to_name(harvest_object.guid)
+
+            package_dict['name'] = package_dict['id']
+            package_dict['title'] = content['name']
+                    #package_dict["title"] = content['headline']
+            package_dict['url'] = content['url']
 
             # add author
             #package_dict["author"] = self._extract_author(content)
@@ -323,63 +331,93 @@ class MassbankHarvester(HarvesterBase):
             #package_dict["owner_org"] = owner_org
 
             # add license
-            package_dict["license_id"] = self._extract_license_id(context=context,content=content)
+            #package_dict["license_id"] = self._extract_license_id(context=context,content=content)
 
 
             # add resources
-            url = self._get_possible_resource(harvest_object, content)
-            package_dict["resources"] = self._extract_resources(url, content)
+            #url = self._get_possible_resource(harvest_object, content)
 
-            # extract tags from 'type' and 'subject' field
-            # everything else is added as extra field
-            tags, extras, related_resources = self._extract_tags_and_extras(content)
-            package_dict["tags"] = tags
-            package_dict["extras"] = extras
+            #url = content['url']
+
+           # package_dict["resources"] = self._extract_resources(url, content)
+           #
+           # # extract tags from 'type' and 'subject' field
+           # # everything else is added as extra field
+           # tags, extras, related_resources = self._extract_tags_and_extras(content)
+           # package_dict["tags"] = tags
+           # package_dict["extras"] = extras
+           #
+           #
+           # # create smiles code form inchi & add to extras table
+           # smiles,inchi_key,exact_mass,mol_formula = self._get_chemical_info(package_dict,content)
+           # extras.append({"key":"smiles", "value": smiles})
+           # extras.append({"key":"inchi_key", "value": inchi_key})
+           # extras.append({"key": "exactmass", "value": exact_mass})
+           #
+           #
+           # # groups aka projects
+           # groups = []
+           #
+           # # create group based on set
+           # if content["set_spec"]:
+           #     log.debug("set_spec: %s" % content["set_spec"])
+           #     groups.extend(
+           #         {"id": group_id}
+           #         for group_id in self._find_or_create_groups(
+           #             content["set_spec"], context.copy()
+           #         )
+           #     )
+           #
+           # # add groups from content
+           # groups.extend(
+           #     {"id": group_id}
+           #     for group_id in self._extract_groups(content, context.copy())
+           # )
+           #
+           # package_dict["groups"] = groups
+           #
+           # # allow sub-classes to add additional fields
+           # package_dict = self._extract_additional_fields(
+           #     content, package_dict
+           # )
+           #
+           # log.debug("Create/update package using dict: %s" % package_dict)
+           # self._create_or_update_package(
+           #     package_dict, harvest_object, "package_show"
+           # )
+           # rebuild(package_dict["name"])
+           #
+           # Session.commit()
+           #
+           # log.debug("Finished record")
+           # log.debug(self._save_relationships_to_db(package_dict, content, smiles,inchi_key,exact_mass,mol_formula))
 
 
-            # create smiles code form inchi & add to extras table
-            smiles,inchi_key,exact_mass,mol_formula = self._get_chemical_info(package_dict,content)
-            extras.append({"key":"smiles", "value": smiles})
-            extras.append({"key":"inchi_key", "value": inchi_key})
-            extras.append({"key": "exactmass", "value": exact_mass})
 
 
-            # groups aka projects
-            groups = []
+            # add notes, license_id
+            package_dict['notes'] = content['description']
+            #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
+            #log.debug(f'This is the license {package_dict["license_id"]}')
 
-            # create group based on set
-            if content["set_spec"]:
-                log.debug("set_spec: %s" % content["set_spec"])
-                groups.extend(
-                    {"id": group_id}
-                    for group_id in self._find_or_create_groups(
-                        content["set_spec"], context.copy()
-                    )
-                )
+            extras = self._extract_extras_image(package=package_dict, content=content)
+            package_dict['extras'] = extras
 
-            # add groups from content
-            groups.extend(
-                {"id": group_id}
-                for group_id in self._extract_groups(content, context.copy())
-            )
+            tags = self._extract_tags(content)
+            package_dict['tags'] = tags
 
-            package_dict["groups"] = groups
-
-            # allow sub-classes to add additional fields
-            package_dict = self._extract_additional_fields(
-                content, package_dict
-            )
-
+            # creating package
             log.debug("Create/update package using dict: %s" % package_dict)
             self._create_or_update_package(
                 package_dict, harvest_object, "package_show"
             )
-            rebuild(package_dict["name"])
 
+            rebuild(package_dict["name"])
             Session.commit()
 
+            self._send_to_db(package=package_dict, content=content)
+
             log.debug("Finished record")
-            log.debug(self._save_relationships_to_db(package_dict, content, smiles,inchi_key,exact_mass,mol_formula))
 
         except (Exception) as e:
             log.exception(e)
@@ -400,19 +438,38 @@ class MassbankHarvester(HarvesterBase):
             "url": "url",
         }
 
-    def _extract_author(self, content):
-        return ", ".join(content["creator"])
+    #def _extract_author(self, content):
+    #    return ", ".join(content["creator"])
 
-    def _extract_license_id(self, context,content):
-        package_license = None
-        content_license = ", ".join(content["rights"])
-        license_list = get_action('license_list')(context.copy(),{})
-        for license_name in license_list:
+    # def _extract_license_id(self, context,content):
+    #     package_license = None
+    #     content_license = ", ".join(content["rights"])
+    #     license_list = get_action('license_list')(context.copy(),{})
+    #     for license_name in license_list:
+    #
+    #         if content_license == license_name['id'] or content_license ==license_name['url'] or content_license == license_name['title']:
+    #             package_license = license_name['id']
+    #
+    #     return package_license
 
-            if content_license == license_name['id'] or content_license ==license_name['url'] or content_license == license_name['title']:
-                package_license = license_name['id']
-
-        return package_license
+    def _extract_resources(self, content):
+        resources = []
+        url = content['url']
+        log.debug("URL of resource: %s" % url)
+        if url:
+            try:
+                resource_format = content["format"][0]
+            except (IndexError, KeyError):
+                resource_format = "HTML"
+            resources.append(
+                {
+                    "name": content["name"],
+                    "resource_type": resource_format,
+                    "format": resource_format,
+                    "url": url,
+                }
+            )
+        return resources
 
 
     def _extract_tags_and_extras(self, content):
@@ -458,17 +515,6 @@ class MassbankHarvester(HarvesterBase):
 
         return (tags, extras, related_resources)
 
-    def _get_possible_resource(self, harvest_obj, content):
-        url = None
-        candidates = content["identifier"]
-        candidates.append(harvest_obj.guid)
-        for ident in candidates:
-            if ident.startswith("http://") or ident.startswith("https://"):
-                url = ident
-            elif ident.startswith("10."):
-                url = "https://doi.org/" + ident
-                break
-        return url
 
     def _extract_resources(self, url, content):
         resources = []
@@ -521,110 +567,121 @@ class MassbankHarvester(HarvesterBase):
 
 # NFDI4Chem extensions for storing chemical data in respective tables
 
-    def _get_chemical_info(self, package ,content):
-
-        """ function to convert InChI code to smiles code.
-        This uses rdkit library to  convert available InChI to SMILES. (Chemoinformatic library)
-
-        Database Table has been generated for molecule data.
-        We use psycopg2 to connect to database and INSERT data using SQL query
-
-        """
-        #global values
-        smiles = None
-        inchi_key = None
-        exact_mass = None
-        mol_formula = None
-        standard_inchi = content["inchi"]
+    def _extract_extras_image(self, package, content):
+        extras = []
         package_id = package['id']
 
-        for inchi_code in standard_inchi:
-            if inchi_code.startswith('InChI'):
-                molecu = inchi.MolFromInchi(inchi_code)
-                smiles = rdmolfiles.MolToSmiles(molecu)
-                inchi_key = inchi.InchiToInchiKey(inchi_code)
-                exact_mass = Descriptors.MolWt(molecu)
-                mol_formula = rdMolDescriptors.CalcMolFormula(molecu)
+        standard_inchi = content['inChI']
 
-                # upload images to folder
-                try:
-                    filepath = '/var/lib/ckan/default/storage/images/' + str(inchi_key) + '.png'
-                    open(filepath,'w')
+        inchi_key = content['inchikey']
+        smiles = content['smiles']
+        exact_mass = content['monoisotopicMolecularWeight']
+
+        extras.append({"key": "inchi", 'value': standard_inchi})
+        extras.append({"key": "inchi_key", 'value': inchi_key})
+        extras.append({"key": "smiles", 'value': smiles})
+        extras.append({'key': "exactmass", "value": exact_mass})
+
+        if standard_inchi.startswith('InChI'):
+            molecu = inchi.MolFromInchi(standard_inchi)
+            log.debug("Molecule generated")
+            try:
+                filepath = '/var/lib/ckan/default/storage/images/' + str(inchi_key) + '.png'
+                if os.path.isfile(filepath):
+                    log.debug("Image Already exists")
+                else:
                     Draw.MolToFile(molecu, filepath)
                     log.debug("Molecule Image generated for %s", package_id)
-                except Exception as e:
-                    log.error(e)
 
-        log.debug("Moleculer Data loaded for %s", package['id'])
-        log.debug(f"Molecular Formula {mol_formula}")
+            except Exception as e:
+                log.error(e)
 
-        return smiles, inchi_key, exact_mass, mol_formula
+                # extracting date metadata as extra data.
+        try:
+            if content['datePublished']:
+                published = content['datePublished']
+                date_value = parse(published)
+                date_without_tz = date_value.replace(tzinfo=None)
+                value = date_without_tz.isoformat()
+                extras.append({"key": "datePublished", "value": value})
+            if content['dateCreated']:
+                created = content['dateCreated']
+                date_value = parse(created)
+                date_without_tz = date_value.replace(tzinfo=None)
+                value = date_without_tz.isoformat()
+                extras.append({"key": "dateCreated", "value": value})
+            if content['dateModified']:
+                modified = content['dateModified']
+                date_value = parse(modified)
+                date_without_tz = date_value.replace(tzinfo=None)
+                value = date_without_tz.isoformat()
+                extras.append({"key": "dateModified", "value": value})
+        except Exception as e:
+            log.exception(e)
+            pass
+
+        return extras
 
 
+    ''' Sending data to DB'''
 
-    def _save_relationships_to_db(self, package, content, smiles, inchi_key, exact_mass,mol_formula):
+    def _send_to_db(self, package, content):
 
-        """ Database Table have been generated for storing related resources
-        We connect to database and send those values directly  from harvested metadata
-        Molecule data is also sent from this function, storing into molecule_data table"""
+        name_list = []
+        package_id = package['id']
+        standard_inchi = content['inChI']
 
-        package_id =    package['id']
-        relation_id =   content['relation']
-        relationType =  content['relationType']
-        relationIdType = content['relationIdType']
-        standard_inchi = content["inchi"]
+        inchi_key = content['inchikey']
+        smiles = content['smiles']
+        exact_mass = content['monoisotopicMolecularWeight']
+        mol_formula = content['molecularFormula']
 
-        value = list(self.yield_func(package_id, relation_id,relationType,relationIdType))
+        # To harvest alternate Names and define them to list such that they can be dumped to database
+        alternatenames = content['alternateName']
 
+        if isinstance(alternatenames, list) is True:
+            for p in alternatenames:
+                name = [package_id, p]
+                name_list.append(name)
+        else:
+            name_list.append([package_id, alternatenames])
 
-        #connect to db
-        con = psycopg2.connect(user = DB_USER,
-                                     host =  DB_HOST,
-                                     password = DB_pwd,
-                                     dbname = DB_NAME )
+        # connect to db
+        con = psycopg2.connect(user=DB_USER,
+                               host=DB_HOST,
+                               password=DB_pwd,
+                               dbname=DB_NAME)
 
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+
+        values = [package_id, json.dumps(standard_inchi), smiles, inchi_key, exact_mass, mol_formula]
 
         # Cursor
         cur = con.cursor()
 
         # Check if the row already exists, if not then INSERT
-        for val in  value:
-            cur.execute(
-                "SELECT * FROM related_resources WHERE package_id = %s AND relation_id = %s;", (val[0],val[1],))
 
-            if cur.fetchone() is None:
-                cur.execute("INSERT INTO related_resources VALUES (nextval('related_resources_id_seq'),%s,%s,%s,%s)", val)
+        cur.execute("SELECT * FROM molecule_data WHERE package_id = %s", (package_id,))
+        if cur.fetchone() is None:
+            cur.execute("INSERT INTO molecule_data VALUES (nextval('molecule_data_id_seq'),%s,%s,%s,%s,%s,%s)", values)
 
-
-        # Sending molecular information to database table(molecule_data table)
-
-        mol_values = [package_id, json.dumps(standard_inchi), smiles, inchi_key, exact_mass,mol_formula]
-
-        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-
-        # cursor for execution
         cur2 = con.cursor()
 
-        # Check if the row already exists, if no then INSERT new row
-        cur2.execute("SELECT * FROM molecule_data WHERE package_id = %s", (package_id,))
-        if cur2.fetchone() is None:
-            cur2.execute("INSERT INTO molecule_data VALUES (nextval('molecule_data_id_seq'),%s,%s,%s,%s,%s,%s)", mol_values)
-        else:
-            cur2.execute("INSERT INTO molecule_data(package_id,inchi,smiles,inchi_key,exact_mass,mol_formula) VALUES (%s,%s,%s,%s,%s,%s)",
-                         mol_values)
+        for name in name_list:
+            cur2.execute("SELECT * FROM related_resources WHERE package_id = %s AND alternate_name = %s;", name)
+            log.debug(f'db to {name}')
+            if cur2.fetchone() is None:
+                cur2.execute(
+                    "INSERT INTO related_resources(id,package_id,alternate_name) VALUES(nextval('related_resources_id_seq'),%s,%s)",
+                    name)
         # commit cursor
         con.commit()
-
         # close cursor
         cur.close()
-        # close cursor
-        cur2.close()
-
         # close connection
         con.close()
-
-        return "Data loaded to database"
+        log.debug('data sent to db')
+        return 0
 
     def _extract_measuring_tech(self,content):
 
