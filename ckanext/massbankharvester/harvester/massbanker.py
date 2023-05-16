@@ -324,11 +324,12 @@ class MassbankHarvester(HarvesterBase):
             #package_dict["author"] = self._extract_author(content)
 
             # add owner_org
-            #source_dataset = get_action("package_show")(
-             #   context.copy(), {"id": harvest_object.source.id}
-            #)
-            #owner_org = source_dataset.get("owner_org")
-            #package_dict["owner_org"] = owner_org
+
+            source_dataset = get_action("package_show")(
+                context.copy(), {"id": harvest_object.source.id}
+            )
+            owner_org = source_dataset.get("owner_org")
+            package_dict["owner_org"] = owner_org
 
             # add license
             #package_dict["license_id"] = self._extract_license_id(context=context,content=content)
