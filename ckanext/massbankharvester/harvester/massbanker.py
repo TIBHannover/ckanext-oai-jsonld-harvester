@@ -340,7 +340,7 @@ class MassbankHarvester(HarvesterBase):
 
             #url = content['url']
 
-           # package_dict["resources"] = self._extract_resources(url, content)
+
            #
            # # extract tags from 'type' and 'subject' field
            # # everything else is added as extra field
@@ -396,6 +396,7 @@ class MassbankHarvester(HarvesterBase):
 
         #'''_ adapted from Bioschema scrapper Harvester for updates _'''
         # add notes, license_id
+            package_dict["resources"] = self._extract_resources(content)
 
             package_dict['notes'] = content['description']
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
