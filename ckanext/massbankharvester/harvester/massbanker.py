@@ -330,7 +330,7 @@ class MassbankHarvester(HarvesterBase):
 
             log.debug('This would be citation of authors  %s', citation)
             #_study_citation_ = _study_author['citation']
-            package_dict["author"] = self._extract_author(_study_author_)
+            package_dict["author"] = self._extract_author(citation)
 
             # add owner_org
 
