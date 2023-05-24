@@ -457,11 +457,11 @@ class MassbankHarvester(HarvesterBase):
         extras = []
         package_id = package['id']
 
-        standard_inchi = content['inChI']
+        standard_inchi = content[0]['inChI']
 
-        inchi_key = content['inchikey']
-        smiles = content['smiles']
-        exact_mass = content['monoisotopicMolecularWeight']
+        inchi_key = content[0]['inchikey']
+        smiles = content[0]['smiles']
+        exact_mass = content[0]['monoisotopicMolecularWeight']
 
         extras.append({"key": "inchi", 'value': standard_inchi})
         extras.append({"key": "inchi_key", 'value': inchi_key})
