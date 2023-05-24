@@ -325,13 +325,14 @@ class MassbankHarvester(HarvesterBase):
             package_dict['url'] = study['url']
 
             # add author
-            _study_isPart_ = study['isPartOf']
-            citation = _study_isPart_[0]['citation']
+            try:
+                _study_isPart_ = study['isPartOf']
+                citation = _study_isPart_[0]['citation']
 
-            log.debug('This would be citation of authors  %s', citation)
+                log.debug('This would be citation of authors  %s', citation)
             #_study_citation_ = _study_author['citation']
 
-            try:
+
                 package_dict["author"] = self._extract_author(citation)
             except Exception as e:
                 log.exception(e)
