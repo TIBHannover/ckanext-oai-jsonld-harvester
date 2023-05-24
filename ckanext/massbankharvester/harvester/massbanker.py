@@ -458,9 +458,10 @@ class MassbankHarvester(HarvesterBase):
 
         standard_inchi = content['inChI']
 
-        inchi_key = content['inchikey']
-        smiles = content['smiles']
-        exact_mass = content['monoisotopicMolecularWeight']
+        inchi_key = content['inChIKey']
+        smiles = content['smiles'][2]
+        molecu = inchi.MolFromInchi(standard_inchi)
+        exact_mass = Descriptors.MolWt(molecu)
 
         extras.append({"key": "inchi", 'value': standard_inchi})
         extras.append({"key": "inchi_key", 'value': inchi_key})
@@ -517,7 +518,7 @@ class MassbankHarvester(HarvesterBase):
         standard_inchi = content['inChI']
 
         inchi_key = content['inchikey']
-        smiles = content['smiles']
+        smiles = content['smiles'][2]
         exact_mass = content['monoisotopicMolecularWeight']
         mol_formula = content['molecularFormula']
 
