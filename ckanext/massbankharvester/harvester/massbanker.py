@@ -361,7 +361,9 @@ class MassbankHarvester(HarvesterBase):
 
             log.debug(hasBioChemEntityPart[0])
             extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart[0])
+            dates = self._extract_publish_dates(content = study)
             package_dict['extras'] = extras
+            package_dict['extras'].append(dates)
 
             tags = self._extract_tags(dataset)
             #package_dict['tags'] = tags
@@ -375,7 +377,7 @@ class MassbankHarvester(HarvesterBase):
             rebuild(package_dict["name"])
             Session.commit()
 
-            self._send_to_db(package=package_dict, content=content)
+            self._send_to_db(package=package_dict, content=hasBioChemEntityPart[0])
 
             log.debug("Finished record")
 
@@ -485,6 +487,11 @@ class MassbankHarvester(HarvesterBase):
                 log.error(e)
 
                 # extracting date metadata as extra data.
+    def _extract_publish_dates(self,content):
+
+        extras = []
+        #package_id = package['id']
+
         try:
             if content['datePublished']:
                 published = content['datePublished']
