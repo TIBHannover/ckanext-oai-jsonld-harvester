@@ -485,8 +485,9 @@ class MassbankHarvester(HarvesterBase):
 
             except Exception as e:
                 log.error(e)
+        return extras
 
-                # extracting date metadata as extra data.
+ # extracting date metadata as extra data.
     def _extract_publish_dates(self,content):
 
         extras = []
