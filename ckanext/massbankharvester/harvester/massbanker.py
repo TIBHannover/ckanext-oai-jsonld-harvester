@@ -86,7 +86,7 @@ class MassbankHarvester(HarvesterBase):
                 )
                 #TODO: drop if and  break for individual identifier.
                 #if harvest_obj.guid == 'https://massbank.eu/MassBank/RecordDisplay?id=MSBNK-Fac_Eng_Univ_Tokyo-JP002512#VTSZSPVMHBJJIS-UHFFFAOYSA-N':
-                if harvest_obj.guid == 'D506c':
+                if harvest_obj.guid == 'D506d':
                     harvest_obj.save()
                     harvest_obj_ids.append(harvest_obj.id)
                     log.debug("Harvest obj %s created" % harvest_obj.id)
