@@ -325,9 +325,10 @@ class MassbankHarvester(HarvesterBase):
             package_dict['url'] = study['url']
 
             # add author
-            _study_author_ = study['author']
-            _study_citation_ = _study_author['citation']
-            package_dict["author"] = self._extract_author(_study_citation_)
+            _study_author_ = study['isPartOf']['author']['citation']
+            log.debug('This would be citation of authors  %s', _study_author_)
+            #_study_citation_ = _study_author['citation']
+            package_dict["author"] = self._extract_author(_study_author_)
 
             # add owner_org
 
