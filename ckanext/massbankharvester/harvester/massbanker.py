@@ -309,7 +309,7 @@ class MassbankHarvester(HarvesterBase):
             mapping = self._get_mapping()
             for ckan_field, json_container_field in mapping.items():
                 try:
-                    package_dict[ckan_field] = content[json_container_field][0]
+                    package_dict[ckan_field] = content[0][json_container_field]
                 except (IndexError, KeyError):
                     continue
 
