@@ -364,6 +364,8 @@ class MassbankHarvester(HarvesterBase):
             dates = self._extract_publish_dates(content = study)
             package_dict['extras'] = extras
             package_dict['extras'].append(dates)
+            exact_mass = package_dict['extras']['exact_mass']
+            log.debug(package_dict['extras'])
 
             tags = self._extract_tags(dataset)
             #package_dict['tags'] = tags
