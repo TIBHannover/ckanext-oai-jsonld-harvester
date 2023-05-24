@@ -364,8 +364,8 @@ class MassbankHarvester(HarvesterBase):
             dates = self._extract_publish_dates(content = study)
             package_dict['extras'] = extras
             package_dict['extras'].append(dates)
-            exact_mass = package_dict['extras']
-            log.debug(package_dict['extras'])
+            #exact_mass = package_dict['extras']
+            #log.debug(package_dict['extras'])
 
             tags = self._extract_tags(dataset)
             #package_dict['tags'] = tags
@@ -477,6 +477,7 @@ class MassbankHarvester(HarvesterBase):
         if standard_inchi.startswith('InChI'):
             molecu = inchi.MolFromInchi(standard_inchi)
             exact_mass = Descriptors.MolWt(molecu)
+            log.debug(exact_mass)
             extras.append({'key': "exactmass", "value": exact_mass})
             log.debug("Molecule generated")
             try:
