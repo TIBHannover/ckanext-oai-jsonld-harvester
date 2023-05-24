@@ -534,7 +534,7 @@ class MassbankHarvester(HarvesterBase):
 
         inchi_key = content['inChIKey']
         smiles = content['smiles'][2]
-        #exact_mass = content['monoisotopicMolecularWeight']
+        exact_mass = 492.3890000000001
         mol_formula = content['molecularFormula']
 
         # To harvest alternate Names and define them to list such that they can be dumped to database
