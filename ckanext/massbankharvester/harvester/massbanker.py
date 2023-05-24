@@ -358,7 +358,6 @@ class MassbankHarvester(HarvesterBase):
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
 
-
             log.debug(hasBioChemEntityPart)
             extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart)
             package_dict['extras'] = extras
