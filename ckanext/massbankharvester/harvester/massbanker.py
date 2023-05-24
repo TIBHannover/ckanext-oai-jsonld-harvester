@@ -326,7 +326,8 @@ class MassbankHarvester(HarvesterBase):
 
             # add author
             _study_isPart_ = study['isPartOf']
-            citation = _study_isPart_['author']['citation']
+            isPartAuthor = _study_isPart_['author']
+            citation = isPartAuthor['citation']
             log.debug('This would be citation of authors  %s', citation)
             #_study_citation_ = _study_author['citation']
             package_dict["author"] = self._extract_author(_study_author_)
