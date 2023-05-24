@@ -459,15 +459,17 @@ class MassbankHarvester(HarvesterBase):
         package_id = package['id']
 
         standard_inchi = content['inChI']
-
         inchi_key = content['inChIKey']
         smiles = content['smiles'][2]
+        mol_formula = content['molecularFormula']
+
         #molecu = inchi.MolFromInchi(standard_inchi)
         #exact_mass = Descriptors.MolWt(molecu)
 
         extras.append({"key": "inchi", 'value': standard_inchi})
         extras.append({"key": "inchi_key", 'value': inchi_key})
         extras.append({"key": "smiles", 'value': smiles})
+        extras.append({"key": "mol_formula", 'value': mol_formula})
 
 
         if standard_inchi.startswith('InChI'):
@@ -533,7 +535,7 @@ class MassbankHarvester(HarvesterBase):
         mol_formula = content['molecularFormula']
 
         # To harvest alternate Names and define them to list such that they can be dumped to database
-        alternatenames = content['alternateName']
+        #alternatenames = content['alternateName']
 
         if isinstance(alternatenames, list) is True:
             for p in alternatenames:
