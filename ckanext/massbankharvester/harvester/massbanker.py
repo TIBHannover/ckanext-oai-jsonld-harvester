@@ -325,7 +325,7 @@ class MassbankHarvester(HarvesterBase):
             package_dict['url'] = study['url']
 
             # add author
-            _study_isPart_ = study[0]['isPartOf']
+            _study_isPart_ = study['isPartOf']
             citation = _study_isPart_[0]['citation']
 
             log.debug('This would be citation of authors  %s', citation)
