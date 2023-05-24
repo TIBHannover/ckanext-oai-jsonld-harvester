@@ -460,16 +460,18 @@ class MassbankHarvester(HarvesterBase):
 
         inchi_key = content['inChIKey']
         smiles = content['smiles'][2]
-        molecu = inchi.MolFromInchi(standard_inchi)
-        exact_mass = Descriptors.MolWt(molecu)
+        #molecu = inchi.MolFromInchi(standard_inchi)
+        #exact_mass = Descriptors.MolWt(molecu)
 
         extras.append({"key": "inchi", 'value': standard_inchi})
         extras.append({"key": "inchi_key", 'value': inchi_key})
         extras.append({"key": "smiles", 'value': smiles})
-        extras.append({'key': "exactmass", "value": exact_mass})
+
 
         if standard_inchi.startswith('InChI'):
             molecu = inchi.MolFromInchi(standard_inchi)
+            exact_mass = Descriptors.MolWt(molecu)
+            extras.append({'key': "exactmass", "value": exact_mass})
             log.debug("Molecule generated")
             try:
                 filepath = '/var/lib/ckan/default/storage/images/' + str(inchi_key) + '.png'
