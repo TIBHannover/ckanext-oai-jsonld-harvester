@@ -527,7 +527,7 @@ class MassbankHarvester(HarvesterBase):
         package_id = package['id']
         standard_inchi = content['inChI']
 
-        inchi_key = content['inchikey']
+        inchi_key = content['inChIKey']
         smiles = content['smiles'][2]
         #exact_mass = content['monoisotopicMolecularWeight']
         mol_formula = content['molecularFormula']
