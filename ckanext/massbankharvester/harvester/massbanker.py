@@ -301,7 +301,10 @@ class MassbankHarvester(HarvesterBase):
 
             package_dict = {}
             content = json.loads(harvest_object.content)
-            log.debug(content)
+            #log.debug(content)
+            study = content[1]
+            dataset = content[0]
+            log.debug(study)
 
             package_dict["id"] = munge_title_to_name(harvest_object.guid)
             package_dict["name"] = package_dict["id"]
@@ -309,7 +312,7 @@ class MassbankHarvester(HarvesterBase):
             mapping = self._get_mapping()
             for ckan_field, json_container_field in mapping.items():
                 try:
-                    package_dict[ckan_field] = content[0][json_container_field]
+                    package_dict[ckan_field] = study[1][json_container_field]
                 except (IndexError, KeyError):
                     continue
 
@@ -317,9 +320,9 @@ class MassbankHarvester(HarvesterBase):
             package_dict["id"] = munge_title_to_name(harvest_object.guid)
 
             package_dict['name'] = package_dict['id']
-            package_dict['title'] = content['name']
+            package_dict['title'] = study[1]['name']
                     #package_dict["title"] = content['headline']
-            package_dict['url'] = content['url']
+            package_dict['url'] = study[1]['url']
 
             # add author
             #package_dict["author"] = self._extract_author(content)
@@ -399,14 +402,18 @@ class MassbankHarvester(HarvesterBase):
         # add notes, license_id
             package_dict["resources"] = self._extract_resources(content)
 
-            package_dict['notes'] = content['description']
+            package_dict['notes'] = study[1]['description']
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
 
-            extras = self._extract_extras_image(package=package_dict, content=content)
+            #TODO: Change according to required 'type'
+            biochem_entity = study['about']
+            hasBioChemEntityPart = biochem_entity['hasBioChemEntityPart']
+            log.debug(hasBioChemEntityPart)
+            extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart)
             package_dict['extras'] = extras
 
-            #tags = self._extract_tags(content)
+            tags = self._extract_tags(dataset)
             #package_dict['tags'] = tags
 
             # creating package
@@ -480,7 +487,7 @@ class MassbankHarvester(HarvesterBase):
     def _extract_tags(self,content):
         tags = []
         try:
-            technique = [content['measurementTechnique']]
+            technique = [content[1]['measurementTechnique']]
             log.debug(f'this is technia {technique}')
             if technique:
                 tags.extend(technique)
