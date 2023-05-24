@@ -325,7 +325,8 @@ class MassbankHarvester(HarvesterBase):
             package_dict['url'] = study['url']
 
             # add author
-            #package_dict["author"] = self._extract_author(content)
+            _study_citation_ = study['citation']
+            package_dict["author"] = self._extract_author(_study_citation_)
 
             # add owner_org
 
@@ -335,80 +336,21 @@ class MassbankHarvester(HarvesterBase):
             owner_org = source_dataset.get("owner_org")
             package_dict["owner_org"] = owner_org
 
-            # add license
-            #package_dict["license_id"] = self._extract_license_id(context=context,content=content)
 
 
-            # add resources
-            #url = self._get_possible_resource(harvest_object, content)
+            '''_ adapted from Bioschema scrapper Harvester for updates _'''
+            # TODO: Change according to required 'type'
+            biochem_entity = study['about']
+            hasBioChemEntityPart = biochem_entity['hasBioChemEntityPart']
 
-            #url = content['url']
-
-
-           #
-           # # extract tags from 'type' and 'subject' field
-           # # everything else is added as extra field
-           # tags, extras, related_resources = self._extract_tags_and_extras(content)
-           # package_dict["tags"] = tags
-           # package_dict["extras"] = extras
-           #
-           #
-           # # create smiles code form inchi & add to extras table
-           # smiles,inchi_key,exact_mass,mol_formula = self._get_chemical_info(package_dict,content)
-           # extras.append({"key":"smiles", "value": smiles})
-           # extras.append({"key":"inchi_key", "value": inchi_key})
-           # extras.append({"key": "exactmass", "value": exact_mass})
-           #
-           #
-           # # groups aka projects
-           # groups = []
-           #
-           # # create group based on set
-           # if content["set_spec"]:
-           #     log.debug("set_spec: %s" % content["set_spec"])
-           #     groups.extend(
-           #         {"id": group_id}
-           #         for group_id in self._find_or_create_groups(
-           #             content["set_spec"], context.copy()
-           #         )
-           #     )
-           #
-           # # add groups from content
-           # groups.extend(
-           #     {"id": group_id}
-           #     for group_id in self._extract_groups(content, context.copy())
-           # )
-           #
-           # package_dict["groups"] = groups
-           #
-           # # allow sub-classes to add additional fields
-           # package_dict = self._extract_additional_fields(
-           #     content, package_dict
-           # )
-           #
-           # log.debug("Create/update package using dict: %s" % package_dict)
-           # self._create_or_update_package(
-           #     package_dict, harvest_object, "package_show"
-           # )
-           # rebuild(package_dict["name"])
-           #
-           # Session.commit()
-           #
-           # log.debug("Finished record")
-           # log.debug(self._save_relationships_to_db(package_dict, content, smiles,inchi_key,exact_mass,mol_formula))
-
-
-        #'''_ adapted from Bioschema scrapper Harvester for updates _'''
         # add notes, license_id
-            package_dict["resources"] = self._extract_resources(content)
+            package_dict["resources"] = self._extract_resources(biochem_entity)
 
             package_dict['notes'] = study['description']
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
 
-            #TODO: Change according to required 'type'
-            biochem_entity = study['about']
-            hasBioChemEntityPart = biochem_entity['hasBioChemEntityPart']
+
             log.debug(hasBioChemEntityPart)
             extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart)
             package_dict['extras'] = extras
@@ -448,8 +390,8 @@ class MassbankHarvester(HarvesterBase):
             "url": "url",
         }
 
-    #def _extract_author(self, content):
-    #    return ", ".join(content["creator"])
+    def _extract_author(self, content):
+       return ", ".join(content["author"])
 
     # def _extract_license_id(self, context,content):
     #     package_license = None
