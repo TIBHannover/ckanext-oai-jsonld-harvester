@@ -312,7 +312,7 @@ class MassbankHarvester(HarvesterBase):
             mapping = self._get_mapping()
             for ckan_field, json_container_field in mapping.items():
                 try:
-                    package_dict[ckan_field] = study[1][json_container_field]
+                    package_dict[ckan_field] = study[json_container_field]
                 except (IndexError, KeyError):
                     continue
 
@@ -320,9 +320,9 @@ class MassbankHarvester(HarvesterBase):
             package_dict["id"] = munge_title_to_name(harvest_object.guid)
 
             package_dict['name'] = package_dict['id']
-            package_dict['title'] = study[1]['name']
+            package_dict['title'] = study['name']
                     #package_dict["title"] = content['headline']
-            package_dict['url'] = study[1]['url']
+            package_dict['url'] = study['url']
 
             # add author
             #package_dict["author"] = self._extract_author(content)
@@ -402,7 +402,7 @@ class MassbankHarvester(HarvesterBase):
         # add notes, license_id
             package_dict["resources"] = self._extract_resources(content)
 
-            package_dict['notes'] = study[1]['description']
+            package_dict['notes'] = study['description']
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
 
