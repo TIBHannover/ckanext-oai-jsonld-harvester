@@ -351,7 +351,6 @@ class MassbankHarvester(HarvesterBase):
             # TODO: Change according to required 'type'
             biochem_entity = study['about']
             hasBioChemEntityPart = biochem_entity['hasBioChemEntityPart']
-            log.debug(hasBioChemEntityPart)
 
         # add notes, license_id
             package_dict["resources"] = self._extract_resources(biochem_entity)
@@ -360,8 +359,8 @@ class MassbankHarvester(HarvesterBase):
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
 
-            log.debug(hasBioChemEntityPart)
-            extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart)
+            log.debug(hasBioChemEntityPart[0])
+            extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart[0])
             package_dict['extras'] = extras
 
             tags = self._extract_tags(dataset)
@@ -457,11 +456,11 @@ class MassbankHarvester(HarvesterBase):
         extras = []
         package_id = package['id']
 
-        standard_inchi = content[0]['inChI']
+        standard_inchi = content['inChI']
 
-        inchi_key = content[0]['inchikey']
-        smiles = content[0]['smiles']
-        exact_mass = content[0]['monoisotopicMolecularWeight']
+        inchi_key = content['inchikey']
+        smiles = content['smiles']
+        exact_mass = content['monoisotopicMolecularWeight']
 
         extras.append({"key": "inchi", 'value': standard_inchi})
         extras.append({"key": "inchi_key", 'value': inchi_key})
