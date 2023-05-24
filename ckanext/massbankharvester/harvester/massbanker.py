@@ -362,8 +362,8 @@ class MassbankHarvester(HarvesterBase):
             log.debug(hasBioChemEntityPart[0])
             extras = self._extract_extras_image(package=package_dict, content=hasBioChemEntityPart[0])
             dates = self._extract_publish_dates(content = study)
-            package_dict['extras'] = extras
-            package_dict['extras'].append(dates)
+            package_dict['extras'] = extras + dates
+
             #exact_mass = package_dict['extras']
             #log.debug(package_dict['extras'])
 
