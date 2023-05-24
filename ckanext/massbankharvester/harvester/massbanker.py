@@ -477,7 +477,7 @@ class MassbankHarvester(HarvesterBase):
         if standard_inchi.startswith('InChI'):
             molecu = inchi.MolFromInchi(standard_inchi)
             exact_mass = Descriptors.MolWt(molecu)
-            log.debug(exact_mass)
+            log.debug('exact mass of the molecule is %s',exact_mass)
             extras.append({'key': "exactmass", "value": exact_mass})
             log.debug("Molecule generated")
             try:
