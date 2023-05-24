@@ -537,12 +537,12 @@ class MassbankHarvester(HarvesterBase):
         # To harvest alternate Names and define them to list such that they can be dumped to database
         #alternatenames = content['alternateName']
 
-        if isinstance(alternatenames, list) is True:
-            for p in alternatenames:
-                name = [package_id, p]
-                name_list.append(name)
-        else:
-            name_list.append([package_id, alternatenames])
+        #if isinstance(alternatenames, list) is True:
+        #    for p in alternatenames:
+        #        name = [package_id, p]
+        #        name_list.append(name)
+        #else:
+        #    name_list.append([package_id, alternatenames])
 
         # connect to db
         con = psycopg2.connect(user=DB_USER,
