@@ -327,7 +327,7 @@ class MassbankHarvester(HarvesterBase):
             # add author
             try:
                 _study_isPart_ = study['isPartOf']
-                citation = _study_isPart_[0]['citation']
+                citation = _study_isPart_['citation']
 
                 log.debug('This would be citation of authors  %s', citation)
             #_study_citation_ = _study_author['citation']
@@ -350,7 +350,8 @@ class MassbankHarvester(HarvesterBase):
             '''_ adapted from Bioschema scrapper Harvester for updates _'''
             # TODO: Change according to required 'type'
             biochem_entity = study['about']
-            hasBioChemEntityPart = biochem_entity[0]['hasBioChemEntityPart']
+            hasBioChemEntityPart = biochem_entity['hasBioChemEntityPart']
+            log.debug(hasBioChemEntityPart)
 
         # add notes, license_id
             package_dict["resources"] = self._extract_resources(biochem_entity)
