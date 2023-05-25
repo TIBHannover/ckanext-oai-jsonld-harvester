@@ -1,4 +1,4 @@
-[![Tests](https://github.com/bhavin2897/ckanext-massbankharvester/workflows/Tests/badge.svg?branch=main)](https://github.com/bhavin2897/ckanext-massbankharvester/actions)
+[![Tests](https://github.com/bhavin2897/ckanext-oai-jsonld-harvester/workflows/Tests/badge.svg?branch=main)](https://github.com/bhavin2897/ckanext-massbankharvester/actions)
 
 # ckanext-oai-jsonld-harvester
 
