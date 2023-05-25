@@ -1,6 +1,6 @@
 [![Tests](https://github.com/bhavin2897/ckanext-massbankharvester/workflows/Tests/badge.svg?branch=main)](https://github.com/bhavin2897/ckanext-massbankharvester/actions)
 
-# ckanext-massbankharvester
+# ckanext-oai-jsonld-harvester
 
 **TODO:** Put a description of your extension here:  What does it do? What features does it have? Consider including some screenshots or embedding a video!
 
