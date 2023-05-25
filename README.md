@@ -15,17 +15,8 @@ Compatibility with core CKAN versions:
 
 | CKAN version    | Compatible?   |
 | --------------- | ------------- |
-| 2.6 and earlier | not tested    |
-| 2.7             | not tested    |
-| 2.8             | not tested    |
-| 2.9             | not tested    |
-
-Suggested values:
-
-* "yes"
-* "not tested" - I can't think of a reason why it wouldn't work
-* "not yet" - there is an intention to get it working
-* "no"
+| 2.8 & earlier            | not tested   |
+| 2.9             | YES    |
 
 
 ## Installation
@@ -34,7 +25,7 @@ Suggested values:
    For example installing any non-Python dependencies or adding any required
    config settings.
 
-To install ckanext-massbankharvester:
+To install ckanext-oai-jsonld-harvester:
 
 1. Activate your CKAN virtual environment, for example:
 
