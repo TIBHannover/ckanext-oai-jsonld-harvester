@@ -26,14 +26,17 @@ To install ckanext-oai-jsonld-harvester:
 
 1. Activate your CKAN virtual environment, for example:
 
-     . /usr/lib/ckan/default/bin/activate
+     `. /usr/lib/ckan/default/bin/activate`
 
 2. Clone the source and install it on the virtualenv
 
-    git clone https://github.com/bhavin2897/ckanext-oai-jsonld-harvester.git
+    `git clone https://github.com/bhavin2897/ckanext-oai-jsonld-harvester.git
+
     cd ckanext-oai-jsonld-harvester
+
     pip install -e .
-    pip install -r requirements.txt 
+
+    pip install -r requirements.txt `
 
 Note: This extension works on RDKit chemi-informatics library which is used to generated molecular information and 
 molecular images during harvesting. And also migration tables are necessary for further database storage. 
@@ -44,13 +47,13 @@ molecular images during harvesting. And also migration tables are necessary for 
 
 5. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
 
-     sudo service apache2 reload
+     `sudo service apache2 reload`
    (and) 
 
    While using production server, reload your servers. 
    
-   sudo service supervisor reload 
-   sudo service nginx reload 
+   `sudo service supervisor reload 
+   sudo service nginx reload `
 
 
 
