@@ -2,7 +2,9 @@
 
 # ckanext-oai-jsonld-harvester
 
-OAI-PMH Harvester for JSON-LD metadata on CKAN, along with Chemistry metadata harvesting.  
+OAI-PMH Harvester for JSON-LD metadata on CKAN, along with Chemistry metadata harvesting.
+
+NFDI4Chem is working on a stratedy to harvest metadata usin OAI protocol for JSON-LD metadata. This extension provides different harvesting procedures for different Bioschema.Org types which can be later migrated to CKAN database. 
 
 ## Requirements
 
