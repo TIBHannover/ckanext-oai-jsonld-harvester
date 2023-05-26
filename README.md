@@ -34,14 +34,15 @@ To install ckanext-oai-jsonld-harvester:
     cd ckanext-oai-jsonld-harvester
     pip install -e .
     pip install -r requirements.txt 
+
 Note: This extension works on RDKit chemi-informatics library which is used to generated molecular information and 
 molecular images during harvesting. And also migration tables are necessary for further database storage. 
 
-3. Add `massbankharvester` to the `ckan.plugins` setting in your CKAN
+4. Add `massbankharvester` to the `ckan.plugins` setting in your CKAN
    config file (by default the config file is located at
    `/etc/ckan/default/ckan.ini`).
 
-4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
+5. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
 
      sudo service apache2 reload
    (and) 
