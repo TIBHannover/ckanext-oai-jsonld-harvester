@@ -6,11 +6,6 @@ OAI-PMH Harvester for JSON-LD metadata on CKAN, along with Chemistry metadata ha
 
 ## Requirements
 
-**TODO:** For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-If your extension works across different versions you can add the following table:
-
 Compatibility with core CKAN versions:
 
 | CKAN version    | Compatible?   |
@@ -28,15 +23,15 @@ To install ckanext-oai-jsonld-harvester:
 
      `. /usr/lib/ckan/default/bin/activate`
 
-2. Clone the source and install it on the virtualenv
+2. Clone the source and install it on the virtualenv 
 
-    `git clone https://github.com/bhavin2897/ckanext-oai-jsonld-harvester.git
+   `git clone https://github.com/bhavin2897/ckanext-oai-jsonld-harvester.git`
 
-    cd ckanext-oai-jsonld-harvester
+       cd ckanext-oai-jsonld-harvester
 
-    pip install -e .
+       pip install -e .
 
-    pip install -r requirements.txt `
+       pip install -r requirements.txt `
 
 Note: This extension works on RDKit chemi-informatics library which is used to generated molecular information and 
 molecular images during harvesting. And also migration tables are necessary for further database storage. 
@@ -52,8 +47,7 @@ molecular images during harvesting. And also migration tables are necessary for 
 
    While using production server, reload your servers. 
    
-   `sudo service supervisor reload sudo service nginx reload `
-
+   `sudo service supervisor reload && sudo service nginx reload `
 
 
 
@@ -61,22 +55,15 @@ molecular images during harvesting. And also migration tables are necessary for 
 
 None at present
 
-**TODO:** Document any optional config settings here. For example:
-
-	# The minimum number of hours to wait before re-checking a resource
-	# (optional, default: 24).
-	ckanext.massbankharvester.some_setting = some_default_value
-
-
 ## Developer installation
 
-To install ckanext-massbankharvester for development, activate your CKAN virtualenv and
+To install ckanext-oai-jsonld-harvester for development, activate your CKAN virtualenv and
 do:
 
-`   git clone https://github.com/bhavin2897/ckanext-massbankharvester.git
-    cd ckanext-massbankharvester
-    python setup.py develop
-    pip install -r dev-requirements.txt `
+      git clone https://github.com/bhavin2897/ckanext-oai-jsonld-harvester.git
+      cd ckanext-oai-jsonld-harvester
+      python setup.py develop
+      pip install -r dev-requirements.txt `
 
 
 ## Tests
@@ -86,9 +73,9 @@ To run the tests, do:
     pytest --ckan-ini=test.ini
 
 
-## Releasing a new version of ckanext-massbankharvester
+## Releasing a new version of ckanext-oai-jsonld-harvester
 
-If ckanext-massbankharvester should be available on PyPI you can follow these steps to publish a new version:
+If ckanext-oai-jsonld-harvester should be available on PyPI you can follow these steps to publish a new version:
 
 1. Update the version number in the `setup.py` file. See [PEP 440](http://legacy.python.org/dev/peps/pep-0440/#public-version-identifiers) for how to choose version numbers.
 
