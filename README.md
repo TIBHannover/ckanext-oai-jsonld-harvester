@@ -52,8 +52,7 @@ molecular images during harvesting. And also migration tables are necessary for 
 
    While using production server, reload your servers. 
    
-   `sudo service supervisor reload 
-   sudo service nginx reload `
+   `sudo service supervisor reload sudo service nginx reload `
 
 
 
@@ -74,10 +73,10 @@ None at present
 To install ckanext-massbankharvester for development, activate your CKAN virtualenv and
 do:
 
-    git clone https://github.com/bhavin2897/ckanext-massbankharvester.git
+`   git clone https://github.com/bhavin2897/ckanext-massbankharvester.git
     cd ckanext-massbankharvester
     python setup.py develop
-    pip install -r dev-requirements.txt
+    pip install -r dev-requirements.txt `
 
 
 ## Tests
