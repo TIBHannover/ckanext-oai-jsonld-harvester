@@ -355,7 +355,11 @@ class MassbankHarvester(HarvesterBase):
         # add notes, license_id
             package_dict["resources"] = self._extract_resources(biochem_entity)
 
-            package_dict['notes'] = study['description']
+            try:
+                package_dict['notes'] = study['description']
+            except Expection as e:
+                log.exception(e)
+
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
             #log.debug(f'This is the license {package_dict["license_id"]}')
 
