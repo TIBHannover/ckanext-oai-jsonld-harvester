@@ -356,8 +356,8 @@ class MassbankHarvester(HarvesterBase):
             package_dict["resources"] = self._extract_resources(biochem_entity)
 
             try:
-                package_dict['notes'] = study['description']
-            except Expection as e:
+                package_dict['notes'] = hasBioChemEntityPart['description']
+            except Error as e:
                 log.exception(e)
 
             #package_dict["license_id"] = self._extract_license_id(context=context, content=content)
