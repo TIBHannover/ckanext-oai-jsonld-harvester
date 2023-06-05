@@ -81,12 +81,11 @@ During harvesting, it is important to follow OAI-PMh vocabulary to obtain desire
 
 #### Configuration Example
 
-   ``` {
-      "metadata_prefix": "json_container",
+   ``` 
+      {"metadata_prefix": "json_container",
       "set":"MassBank:DataSets",
       "from": "2022-12-01T00:00:01Z",
-      "force_http_get": true
-      } 
+      "force_http_get": true} 
    ```
 
 **Note**: Please check the behaviour of the source URL, for which sets and duration of time have to be used before using the harvester. 
