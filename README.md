@@ -57,7 +57,8 @@ molecular images during harvesting. And also migration tables are necessary for 
 
 ## OAI-PMH JSON-LD Harvesting & Configuration Set-Up.
 Firstly, log-in as `harvest` user. 
-* with the web browser go to <your ckan url>/harvest/new
+* with the web browser go to `<your ckan url>/harvest/new`
+
 * Fill the source URL from which you like to obtain datasets from (an OAI-PMH JSON-LD repository) 
 
 During harvesting, it is important to follow OAI-PMh vocabulary to obtain desired datasets.
