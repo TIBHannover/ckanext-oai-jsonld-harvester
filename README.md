@@ -7,7 +7,10 @@ OAI-PMH Harvester for JSON-LD metadata on CKAN, along with Chemistry metadata ha
 NFDI4Chem is working on a strategy to harvest metadata using OAI protocol for JSON-LD metadata. This extension provides different harvesting procedures for different Bioschema.Org types which can be later migrated to CKAN database.
 This also combines two important harvester that have been already developed for NFDI4Chem Search Service, [ckanext-oaipmh](https://github.com/TIBHannover/ckanext-oaipmh) and [ckanext-bioschemaharvester](https://github.com/TIBHannover/ckanext-bioschemaharvester). 
 
-Just like the harvester mentioned above, this harvester also uses RDKit python module to generate graphical/imaginary representation of molecules and also other chemi-infomatics. 
+Just like the harvester mentioned above, this harvester also uses RDKit python module to generate graphical/imaginary representation of molecules and also other chemi-infomatics.
+
+Currently, it supports two different JSON-LD schemas choosen for harvesting in different hieratical metadata fields followed by their key values mapping with CKAN.
+
 
 
 ## Requirements
