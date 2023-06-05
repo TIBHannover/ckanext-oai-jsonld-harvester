@@ -37,7 +37,7 @@ To install ckanext-oai-jsonld-harvester:
 
        pip install -e .
 
-       pip install -r requirements.txt `
+       pip install -r requirements.txt 
 
 Note: This extension works on RDKit chemi-informatics library which is used to generated molecular information and 
 molecular images during harvesting. And also migration tables are necessary for further database storage. 
@@ -80,14 +80,14 @@ During harvesting, it is important to follow OAI-PMh vocabulary to obtain desire
 * on the harvest admin click `Reharvest`
 
 #### Configuration Example
-``
-{
-"metadata_prefix": "json_container",
-"set":"MassBank:DataSets",
-"from": "2022-12-01T00:00:01Z",
-"force_http_get": true
-}
-``
+
+   ``` {
+      "metadata_prefix": "json_container",
+      "set":"MassBank:DataSets",
+      "from": "2022-12-01T00:00:01Z",
+      "force_http_get": true
+      } 
+   ```
 
 **Note**: Please check the behaviour of the source URL, for which sets and duration of time have to be used before using the harvester. 
 As it would be difficult for debugging each datasets for a huge repository.
