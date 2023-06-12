@@ -43,7 +43,6 @@ DB_NAME = "ckan_default"
 DB_pwd = "123456789"
 
 
-
 class MassbankHarvester(HarvesterBase):
     """
     Massbank Harvester
