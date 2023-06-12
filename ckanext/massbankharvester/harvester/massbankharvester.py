@@ -300,112 +300,98 @@ class MassbankHarvester(HarvesterBase):
             # # extract tags from 'type' and 'subject' field
             # # everything else is added as extra field
 
-        Expand
-        Down
+    #def import_stage(self, harvest_object):
+        # tags, extras, related_resources = self._extract_tags_and_extras(content)
+        # package_dict["tags"] = tags
+        # package_dict["extras"] = extras
+        #
+        #
+        # # create smiles code form inchi & add to extras table
+        # smiles,inchi_key,exact_mass,mol_formula = self._get_chemical_info(package_dict,content)
+        # extras.append({"key":"smiles", "value": smiles})
+        # extras.append({"key":"inchi_key", "value": inchi_key})
+        # extras.append({"key": "exactmass", "value": exact_mass})
+        #
+        #
+        # # groups aka projects
+        # groups = []
+        #
+        # # create group based on set
+        # if content["set_spec"]:
+        #     log.debug("set_spec: %s" % content["set_spec"])
+        #     groups.extend(
+        #         {"id": group_id}
+        #         for group_id in self._find_or_create_groups(
+        #             content["set_spec"], context.copy()
+        #         )
+        #     )
+        #
+        # # add groups from content
+        # groups.extend(
+        #     {"id": group_id}
+        #     for group_id in self._extract_groups(content, context.copy())
+        # )
+        #
+        # package_dict["groups"] = groups
+        #
+        # # allow sub-classes to add additional fields
+        # package_dict = self._extract_additional_fields(
+        #     content, package_dict
+        # )
+        #
+        # log.debug("Create/update package using dict: %s" % package_dict)
+        # self._create_or_update_package(
+        #     package_dict, harvest_object, "package_show"
+        # )
+        # rebuild(package_dict["name"])
+        #
+        # Session.commit()
+        #
+        # log.debug("Finished record")
+        # log.debug(self._save_relationships_to_db(package_dict, content, smiles,inchi_key,exact_mass,mol_formula))
 
-        Expand
-        Up
+        # '''_ adapted from Bioschema scrapper Harvester for updates _'''
+        # add notes, license_id
+            package_dict["resources"] = self._extract_resources(content)
 
-
-@ @-396
-
-, 6 + 396, 7 @ @
-
-
-def import_stage(self, harvest_object):
-    # tags, extras, related_resources = self._extract_tags_and_extras(content)
-    # package_dict["tags"] = tags
-    # package_dict["extras"] = extras
-    #
-    #
-    # # create smiles code form inchi & add to extras table
-    # smiles,inchi_key,exact_mass,mol_formula = self._get_chemical_info(package_dict,content)
-    # extras.append({"key":"smiles", "value": smiles})
-    # extras.append({"key":"inchi_key", "value": inchi_key})
-    # extras.append({"key": "exactmass", "value": exact_mass})
-    #
-    #
-    # # groups aka projects
-    # groups = []
-    #
-    # # create group based on set
-    # if content["set_spec"]:
-    #     log.debug("set_spec: %s" % content["set_spec"])
-    #     groups.extend(
-    #         {"id": group_id}
-    #         for group_id in self._find_or_create_groups(
-    #             content["set_spec"], context.copy()
-    #         )
-    #     )
-    #
-    # # add groups from content
-    # groups.extend(
-    #     {"id": group_id}
-    #     for group_id in self._extract_groups(content, context.copy())
-    # )
-    #
-    # package_dict["groups"] = groups
-    #
-    # # allow sub-classes to add additional fields
-    # package_dict = self._extract_additional_fields(
-    #     content, package_dict
-    # )
-    #
-    # log.debug("Create/update package using dict: %s" % package_dict)
-    # self._create_or_update_package(
-    #     package_dict, harvest_object, "package_show"
-    # )
-    # rebuild(package_dict["name"])
-    #
-    # Session.commit()
-    #
-    # log.debug("Finished record")
-    # log.debug(self._save_relationships_to_db(package_dict, content, smiles,inchi_key,exact_mass,mol_formula))
-
-    # '''_ adapted from Bioschema scrapper Harvester for updates _'''
-    # add notes, license_id
-    package_dict["resources"] = self._extract_resources(content)
-
-    package_dict['notes'] = content['description']
-    # package_dict["license_id"] = self._extract_license_id(context=context, content=content)
+            package_dict['notes'] = content['description']
+            # package_dict["license_id"] = self._extract_license_id(context=context, content=content)
 
 
-Expand
-Down
+            # log.debug(f'This is the license {package_dict["license_id"]}')
+            extras = self._extract_extras_image(package=package_dict, content=content)
+            package_dict['extras'] = extras
+            # tags = self._extract_tags(content)
+            # package_dict['tags'] = tags
+            # creating package
+            log.debug("Create/update package using dict: %s" % package_dict)
+            self._create_or_update_package(
+                package_dict, harvest_object, "package_show"
+            )
+            rebuild(package_dict["name"])
+            Session.commit()
+            self._send_to_db(package=package_dict, content=content)
+            log.debug("Finished record")
+        except (Exception) as e:
+            log.exception(e)
+            self._save_object_error(
+                "Exception in fetch stage for %s: %r / %s"
+                % (harvest_object.guid, e, traceback.format_exc()),
+                harvest_object,
+        )
+            return False
 
-# log.debug(f'This is the license {package_dict["license_id"]}')
-extras = self._extract_extras_image(package=package_dict, content=content)
-package_dict['extras'] = extras
-# tags = self._extract_tags(content)
-# package_dict['tags'] = tags
-# creating package
-log.debug("Create/update package using dict: %s" % package_dict)
-self._create_or_update_package(
-    package_dict, harvest_object, "package_show"
-)
-rebuild(package_dict["name"])
-Session.commit()
-self._send_to_db(package=package_dict, content=content)
-log.debug("Finished record")
-except (Exception) as e:
-log.exception(e)
-self._save_object_error(
-    "Exception in fetch stage for %s: %r / %s"
-    % (harvest_object.guid, e, traceback.format_exc()),
-    harvest_object,
-)
-return False
-return True
+        return True
 
 
-def _get_mapping(self):
-    return {
-        "title": "name",
-        "notes": "description",
-        "maintainer": "publisher",
-        "maintainer_email": "",
-        "url": "url",
-    }
+    def _get_mapping(self):
+        return {
+            "title": "name",
+            "notes": "description",
+            "maintainer": "publisher",
+            "maintainer_email": "",
+            "url": "url",
+        }
 
 
 # def _extract_author(self, content):
