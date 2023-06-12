@@ -71,6 +71,7 @@ setup(
     include_package_data=True,
     package_data={
     },
+
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages.
     # see http://docs.python.org/3.4/distutils/setupscript.html
