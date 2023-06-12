@@ -84,7 +84,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        massbankharvester=ckanext.massbankharvester.harvester.massbanker:MassbankHarvester
+        massbankharvester=ckanext.massbankharvester.harvester.nmrXivharvester:MassbankHarvester
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan
