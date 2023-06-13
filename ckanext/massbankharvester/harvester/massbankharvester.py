@@ -35,7 +35,7 @@ DB_pwd = "123456789"
 
 class MassbankHarvester(HarvesterBase):
     """
-    Massbank Harvester
+    OAI JSON-LD Harvester
     """
 
     # TODO: Check weather vaild or not
@@ -44,9 +44,9 @@ class MassbankHarvester(HarvesterBase):
         Return information about this harvester.
         """
         return {
-            "name": "Massbank Harvester",
-            "title": "Massbank Harvester",
-            "description": "Harvester for Massbank OAI Handler with BioSchemaOrg/JSON Container ",
+             "name": "OAI JSON-LD Harvester",
+            "title": "OAI JSON-LD Harvester",
+            "description": "Harvester for OAI Handler with BioSchemaOrg/JSON Container  ",
         }
 
     def gather_stage(self, harvest_job):
