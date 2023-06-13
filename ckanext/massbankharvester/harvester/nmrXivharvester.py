@@ -44,7 +44,7 @@ DB_pwd = "123456789"
 
 class MassbankHarvester(HarvesterBase):
     """
-    Massbank Harvester
+    JSON-LD Harvester
     """
     # TODO: Check weather vaild or not
 
@@ -53,9 +53,9 @@ class MassbankHarvester(HarvesterBase):
         Return information about this harvester.
         """
         return {
-            "name": "Massbank Harvester",
-            "title": "Massbank Harvester",
-            "description": "Harvester for Massbank OAI Handler with BioSchemaOrg/JSON Container ",
+            "name": "OAI JSON-LD Harvester",
+            "title": "OAI JSON-LD Harvester",
+            "description": "Harvester for OAI Handler with BioSchemaOrg/JSON Container  ",
         }
 
     def gather_stage(self, harvest_job):
@@ -82,7 +82,7 @@ class MassbankHarvester(HarvesterBase):
                 harvest_obj = HarvestObject(
                     guid=header.identifier(), job=harvest_job
                 )
-                #TODO: drop if and  break for individual identifier.
+                # TEsting single dataset.
                 #if harvest_obj.guid == 'https://massbank.eu/MassBank/RecordDisplay?id=MSBNK-Fac_Eng_Univ_Tokyo-JP002512#VTSZSPVMHBJJIS-UHFFFAOYSA-N':
                 #if harvest_obj.guid == 'D506d':
                 harvest_obj.save()
@@ -329,14 +329,11 @@ class MassbankHarvester(HarvesterBase):
 
                 log.debug('This would be citation of authors  %s', citation)
             #_study_citation_ = _study_author['citation']
-
-
                 package_dict["author"] = self._extract_author(citation)
             except Exception as e:
                 log.exception(e)
 
             # add owner_org
-
             source_dataset = get_action("package_show")(
                 context.copy(), {"id": harvest_object.source.id}
             )
@@ -344,13 +341,12 @@ class MassbankHarvester(HarvesterBase):
             package_dict["owner_org"] = owner_org
 
 
-
-            '''_ adapted from Bioschema scrapper Harvester for updates _'''
-            # TODO: Change according to required 'type'
+            '''_ adapted from Bioschema scrapper Harvester for updates _
+            Taking consieration of 2-layered JSON from nmrXiv'''
             biochem_entity = study['about']
             hasBioChemEntityPart = biochem_entity['hasBioChemEntityPart']
 
-        # add notes, license_id
+            # add notes, license_id
             package_dict["resources"] = self._extract_resources(biochem_entity)
 
             try:
@@ -456,7 +452,7 @@ class MassbankHarvester(HarvesterBase):
 
 
 
-# NFDI4Chem extensions for storing chemical data in respective tables
+    ''' NFDI4Chem extensions for storing chemical data in respective tables '''
 
     def _extract_extras_image(self, package, content):
         extras = []
@@ -494,7 +490,7 @@ class MassbankHarvester(HarvesterBase):
                 log.error(e)
         return extras
 
- # extracting date metadata as extra data.
+    # extracting date metadata as extra data.
     def _extract_publish_dates(self,content):
 
         extras = []
